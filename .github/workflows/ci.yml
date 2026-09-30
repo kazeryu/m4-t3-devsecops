@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      security-events: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -30,13 +29,13 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: Install Trivy
+        run: |
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@v0.30.0
-        with:
-          image-ref: kazeryu/m4-t3-app:latest
-          format: table
-          exit-code: "0"
-          severity: CRITICAL,HIGH
+        run: |
+          trivy image --severity CRITICAL,HIGH --exit-code 0 --format table kazeryu/m4-t3-app:latest
 
       - name: Run Gitleaks
         uses: gitleaks/gitleaks-action@v2
