@@ -1,0 +1,4 @@
+title = "M4 T3 Gitleaks config"
+
+[extend]
+useDefault = true
